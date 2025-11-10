@@ -6,6 +6,8 @@ from typing import Dict, List, Tuple
 
 
 class InvertedIndex:    
+    """Inverted index mapping terms to posting lists with internal document IDs."""
+
     def __init__(self):
         self.index: Dict[str, List[int]] = defaultdict(list)  # term -> list of internal doc IDs
         self.doc_id_map: Dict[int, str] = {}  # internal ID -> original DOCNO

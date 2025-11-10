@@ -3,6 +3,8 @@ from inverted_index import InvertedIndex
 
 
 class BooleanRetrieval:
+    """Boolean query processor using RPN."""
+    
     def __init__(self, inv_index: InvertedIndex):
         self.inv_index = inv_index
         self.all_docs = sorted(list(self.inv_index.doc_id_map.keys()))

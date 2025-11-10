@@ -1,12 +1,13 @@
 import os
+import argparse
 from inverted_index import InvertedIndex
 from boolean_retrieval import BooleanRetrieval
 
 
-def generate_part2(inv_index: InvertedIndex, queries_file: str, output_file: str):
-    """Generate Part_2.txt with retrieved documents for each query."""
+def process_boolean_queries(inv_index: InvertedIndex, queries_file: str, output_file: str):
+    """Process boolean queries and write retrieved documents to output file."""
     print("\n" + "=" * 60)
-    print("Part 2: Boolean Retrieval")
+    print("Boolean Retrieval")
     print("=" * 60)
     
     retrieval = BooleanRetrieval(inv_index)
@@ -24,10 +25,10 @@ def generate_part2(inv_index: InvertedIndex, queries_file: str, output_file: str
     print(f"Written to {output_file}")
 
 
-def generate_part3(inv_index: InvertedIndex, output_file: str):
-    """Generate Part_3.txt with collection statistics."""
+def generate_collection_statistics(inv_index: InvertedIndex, output_file: str):
+    """Generate collection statistics including term frequencies and analysis."""
     print("\n" + "=" * 60)
-    print("Part 3: Collection Statistics")
+    print("Collection Statistics")
     print("=" * 60)
     
     term_freq = [(term, len(postings)) for term, postings in inv_index.index.items()]
@@ -101,15 +102,36 @@ def find_similar_terms(inv_index: InvertedIndex, term_freq):
 
 
 def main():
-    data_dir = os.path.join(os.path.dirname(__file__), 'data')
-    queries_file = os.path.join(os.path.dirname(__file__), 'BooleanQueries.txt')
+    parser = argparse.ArgumentParser(description='AP Collection IR System')
+    parser.add_argument(
+        '--data-dir',
+        default=os.path.join(os.path.dirname(__file__), 'data'),
+        help='Directory containing the document collection (default: data/)'
+    )
+    parser.add_argument(
+        '--queries-file',
+        default=os.path.join(os.path.dirname(__file__), 'BooleanQueries.txt'),
+        help='File containing boolean queries (default: BooleanQueries.txt)'
+    )
+    parser.add_argument(
+        '--retrieval-output',
+        default='Part_2.txt',
+        help='Output file for boolean retrieval results (default: Part_2.txt)'
+    )
+    parser.add_argument(
+        '--statistics-output',
+        default='Part_3.txt',
+        help='Output file for collection statistics (default: Part_3.txt)'
+    )
     
-    if not os.path.exists(data_dir):
-        print(f"Error: Data directory not found")
+    args = parser.parse_args()
+    
+    if not os.path.exists(args.data_dir):
+        print(f"Error: Data directory not found: {args.data_dir}")
         return
     
-    if not os.path.exists(queries_file):
-        print(f"Error: Queries file not found")
+    if not os.path.exists(args.queries_file):
+        print(f"Error: Queries file not found: {args.queries_file}")
         return
     
     print("=" * 60)
@@ -118,10 +140,10 @@ def main():
     print("\nBuilding index...")
     
     inv_index = InvertedIndex()
-    inv_index.build_from_directory(data_dir)
+    inv_index.build_from_directory(args.data_dir)
     
-    generate_part2(inv_index, queries_file, 'Part_2.txt')
-    generate_part3(inv_index, 'Part_3.txt')
+    process_boolean_queries(inv_index, args.queries_file, args.retrieval_output)
+    generate_collection_statistics(inv_index, args.statistics_output)
     
     print("\n" + "=" * 60)
     print("Completed!")

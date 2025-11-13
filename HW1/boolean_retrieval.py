@@ -104,7 +104,7 @@ class BooleanRetrieval:
                 stack.append(self.negate(p1, p2))
                     
             else:
-                stack.append(self.inv_index.get_posting_list(token.lower()))
+                stack.append(self.inv_index.get_posting_list(token))
         
         if len(stack) != 1:
             return []

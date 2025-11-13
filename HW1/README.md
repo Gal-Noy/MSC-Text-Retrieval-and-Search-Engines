@@ -36,23 +36,11 @@ python main.py --data-dir /path/to/documents \
                --statistics-output stats.txt
 ```
 
-## Query Format
-
-Boolean queries should be written one per line in the queries file. Supported operators:
-
-- `AND` - Intersection of posting lists
-- `OR` - Union of posting lists
-- `NOT` - Complement of posting list
-
-**Example queries:**
-
-```
-information AND retrieval
-computer OR science
-NOT obsolete
-```
-
 ## Output Files
 
 - **Retrieval Output**: Contains document IDs for each query (one line per query)
 - **Statistics Output**: Includes term frequency analysis and collection characteristics
+
+## Disclosure
+
+This project was developed with assistance from Claude Sonnet 4.5.

@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Lucene indexes
+HW2/indexes/
+pyserini_test/IndexStopwordsKrovetzTrecFormat/
+
 # C extensions
 *.so
 
@@ -210,4 +214,3 @@ __marimo__/
 **.txt
 **.pdf
 data/
-IndexStopwordsKrovetzTrecFormat

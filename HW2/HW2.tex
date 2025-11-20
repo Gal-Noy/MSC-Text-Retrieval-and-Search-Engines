@@ -4,18 +4,30 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
 \geometry{margin=1in}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.8em}
 
-\title{Dry Part – Assignment 2\\Text Retrieval and Search Engines}
+% Code listing style
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!10}
+}
+
+\title{Assignment 2\\Text Retrieval and Search Engines}
 \author{Gal Noy \\ 209346485}
 \date{}
 
 \begin{document}
 \maketitle
 
-\section*{1. Vector Space Model}
+\section*{Dry Part}
+
+\subsection*{1. Vector Space Model}
 
 \[
 \begin{array}{c|cccc}
@@ -48,7 +60,7 @@ so
 \end{aligned}
 \]
 
-\subsection*{1.1 Cosine similarity between \(d_1\) and \(d_2\)}
+\subsubsection*{1.1 Cosine similarity between \(d_1\) and \(d_2\)}
 
 tf–idf weighting:
 \[
@@ -101,7 +113,7 @@ Cosine:
 \approx 0.52.
 \]
 
-\subsection*{1.2 Ranking \(d_1,\dots,d_4\) for query \(q = \text{``a b f''}\)}
+\subsubsection*{1.2 Ranking \(d_1,\dots,d_4\) for query \(q = \text{``a b f''}\)}
 
 Documents: raw tf. Query: tf–idf.
 
@@ -145,13 +157,13 @@ Ranking:
 d_4 \succ d_2 \succ d_3 \succ d_1.
 \]
 
-\section*{2. Term Weighting}
+\subsection*{2. Term Weighting}
 
-\subsection*{2.1 Short-document bias}
+\subsubsection*{2.1 Short-document bias}
 
 Cosine similarity normalizes by \(\|\vec{d}\|\). For two documents with similar raw tf on query terms, the shorter document has smaller \(\|\vec{d}\|\), so its normalized weights are larger and its cosine score tends to be higher. This favors short documents even when longer ones may be more informative.
 
-\subsection*{2.2 Weighted tf function}
+\subsubsection*{2.2 Weighted tf function}
 
 Given
 \[
@@ -165,9 +177,9 @@ Normalizes tf into \([\alpha,1]\) per document via \(\mathrm{tf}_{t,d}/\mathrm{t
 \textbf{Issue:}  
 If applied to all vocabulary terms, terms with \(\mathrm{tf}_{t,d}=0\) also get weight \(\alpha>0\), meaning documents get non-zero weight for absent terms, which blurs the distinction between presence and absence and can hurt precision.
 
-\section*{3. Relevance Feedback and Evaluation}
+\subsection*{3. Relevance Feedback and Evaluation}
 
-\subsection*{3.1 AP, P@5 and Recall@5}
+\subsubsection*{3.1 AP, P@5 and Recall@5}
 
 Top-5 list:
 
@@ -201,7 +213,7 @@ Average Precision:
 = \frac{1}{10}(1+1+1+1) = 0.4.
 \]
 
-\subsection*{3.2 Rocchio with graded relevance}
+\subsubsection*{3.2 Rocchio with graded relevance}
 
 In standard Rocchio, all relevant documents contribute equally:
 
@@ -236,7 +248,8 @@ Z_R = \sum_{d\in D_R} \mathrm{rel}(d).
 
 The normalization factor \(Z_R\) ensures that the weighted contribution of relevant documents remains on a consistent scale across queries (e.g., regardless of how many relevant documents exist or how large their grades are).
 
-\subsection*{3.3 Rocchio with rank-based relevance}
+\newpage
+\subsubsection*{3.3 Rocchio with rank-based relevance}
 
 Another approach is to weight relevant documents based on their rank position.  
 A higher-ranked document should influence the query more than one that appears later.  
@@ -263,9 +276,9 @@ Z = \sum_{d\in D_R} g(\mathrm{rank}(d)).
 
 The normalization factor \(Z\) keeps the weighted sum of ranked contributions comparable across queries, preventing queries with many relevant documents from overwhelming the update.
 
-\section*{4. Evaluation}
+\subsection*{4. Evaluation}
 
-\subsection*{4.1 ERR vs NDCG}
+\subsubsection*{4.1 ERR vs NDCG}
 
 ERR is defined as:
 \[
@@ -356,7 +369,7 @@ Thus:
 ERR prefers A, because the user is assumed to stop once a highly relevant document appears at the top.  
 This fits tasks where a single excellent result early in the list is more valuable than several moderately relevant ones spread throughout the ranking.
 
-\subsection*{4.2 When does MAP = MRR?}
+\subsubsection*{4.2 When does MAP = MRR?}
 
 MAP equals MRR when, for every query, the Average Precision reduces to the precision at the first relevant document. This happens in the following cases:
 
@@ -367,9 +380,9 @@ MAP equals MRR when, for every query, the Average Precision reduces to the preci
 \item No query has more than one retrieved relevant document at different ranks (so the contribution to AP comes only from the first relevant match).
 \end{itemize}
 
-\subsection*{4.3 Stopword removal}
+\subsubsection*{4.3 Stopword removal}
 
-\subsubsection*{(a) Lower recall}
+\paragraph*{(a) Lower recall}
 
 \begin{itemize}
 \item ``to be or not to be'': removing stopwords erases most of the query terms, making it impossible to retrieve documents that contain the full phrase, which lowers recall.
@@ -377,7 +390,7 @@ MAP equals MRR when, for every query, the Average Precision reduces to the preci
 \item ``The Who discography'': removing \texttt{the} removes part of the band’s actual name ``The Who'', causing the system to miss relevant documents that contain the exact entity.
 \end{itemize}
 
-\subsubsection*{(b) Lower precision}
+\paragraph*{(b) Lower precision}
 
 \begin{itemize}
 \item ``Bank of America'' \(\to\) ``bank america'': removing \texttt{of} breaks the specific organization name, leading the system to retrieve general documents about banks in America rather than the actual company, lowering precision.
@@ -386,12 +399,12 @@ MAP equals MRR when, for every query, the Average Precision reduces to the preci
 \end{itemize}
 
 
-\subsection*{4.4 R-precision, F1 and AP bounds}
+\subsubsection*{4.4 R-precision, F1 and AP bounds}
 
 There are \(R = 3\) relevant documents in the collection.  
 Given R-precision \(= \frac{2}{3}\), exactly 2 of the top 3 retrieved documents are relevant.
 
-\subsubsection*{4.4.1 F1@3}
+\paragraph*{4.4.1 F1@3}
 
 At rank 3:
 \[
@@ -405,7 +418,7 @@ F_1 = \frac{2PR}{P+R}
 = \frac{2}{3}.
 \]
 
-\subsubsection*{4.4.2 AP bounds at rank 3}
+\paragraph*{4.4.2 AP bounds at rank 3}
 
 Since 2 of the top 3 positions are relevant, the possible patterns for the first three ranks are:
 
@@ -450,9 +463,9 @@ Therefore:
 \mathrm{AP}_{\min} = \frac{7}{18}.
 \]
 
-\section*{5. True/False}
+\subsection*{5. True/False}
 
-\subsection*{5.1 \(P@k\) is a monotonic non-decreasing function of \(k\).}
+\subsubsection*{5.1 \(P@k\) is a monotonic non-decreasing function of \(k\).}
 
 \textbf{False.}  
 Precision@\(k\) is
@@ -461,12 +474,12 @@ P@k = \frac{\text{\# relevant in top }k}{k}.
 \]
 If the next retrieved document is non-relevant, the numerator stays the same while the denominator increases, so precision can drop (e.g., \(P@1=1\), \(P@2=\frac{1}{2}\)).
 
-\subsection*{5.2 Vector space retrieval is always more effective than Boolean retrieval.}
+\subsubsection*{5.2 Vector space retrieval is always more effective than Boolean retrieval.}
 
 \textbf{False.}  
 Effectiveness depends on the task and user needs. Boolean retrieval can be better when exact filtering is required (e.g., legal or patent search), while vector space retrieval is better for ranked, similarity-based searching. Neither is always superior.
 
-\subsection*{5.3 In the vector space model, a higher normalization factor reduces a document's retrieval chances.}
+\subsubsection*{5.3 In the vector space model, a higher normalization factor reduces a document's retrieval chances.}
 
 \textbf{True.}  
 Cosine similarity divides by the document norm:
@@ -475,12 +488,12 @@ Cosine similarity divides by the document norm:
 \]
 For a fixed dot product, a larger \(\|\vec{d}\|\) lowers the similarity score. Long documents with large norms are therefore penalized and less likely to appear high in the ranking.
 
-\subsection*{5.4 Stemming increases the number of unique terms in the index.}
+\subsubsection*{5.4 Stemming increases the number of unique terms in the index.}
 
 \textbf{False.}  
 Stemming maps multiple surface forms to a single stem (e.g., \texttt{running}, \texttt{ran}, \texttt{runs} \(\to\) \texttt{run}). This reduces the vocabulary size and decreases the number of unique index terms.
 
-\subsection*{5.5 Values of \(\beta>1\) in the \(F_\beta\) measure emphasize precision.}
+\subsubsection*{5.5 Values of \(\beta>1\) in the \(F_\beta\) measure emphasize precision.}
 
 \textbf{False.}  
 The \(F_\beta\) formula is:
@@ -489,9 +502,164 @@ F_\beta = \frac{(1+\beta^2)PR}{\beta^2 P + R}.
 \]
 When \(\beta>1\), the term \(\beta^2\) increases the weight of recall in the denominator. Thus \(\beta>1\) emphasizes recall, while \(\beta<1\) emphasizes precision.
 
-\subsection*{5.6 In Rocchio's model, \(\vec{q}_0\) might be closer to the relevant centroid than \(\vec{q}_m\).}
+\subsubsection*{5.6 In Rocchio's model, \(\vec{q}_0\) might be closer to the relevant centroid than \(\vec{q}_m\).}
 
 \textbf{True.}  
 Rocchio updates the query by pulling it toward the relevant centroid and pushing it away from the non-relevant centroid. With poorly chosen parameters \((\alpha,\beta,\gamma)\) or noisy relevance judgments, the negative push from non-relevant documents can move \(\vec{q}_m\) farther away from the true relevant centroid than the original \(\vec{q}_0\).  
+
+\newpage
+
+\section*{Wet Part}
+
+\subsection*{Part A: Index docs.txt and Test Queries}
+
+The index for Part A was built using Pyserini with the following configuration:
+\begin{itemize}
+\item Collection: TrecCollection
+\item Stemmer: none
+\item Stopword removal: disabled
+\item BM25 parameters: \(k_1 = 0.9\), \(b = 0.4\)
+\end{itemize}
+
+\subsubsection*{Question 1: Query ``corporation''}
+
+\paragraph*{1a. How many documents did you retrieve?}
+
+\textbf{Retrieved:} 1 document.
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Rank} & \textbf{Document ID} & \textbf{Score} \\
+\midrule
+1 & D2 & 0.6747 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph*{1b. How many documents did you expect to retrieve?}
+
+\textbf{Expected:} 2 documents.
+
+The query should match both D2 and D3:
+
+\begin{itemize}
+\item \textbf{D2:} contains the term \textbf{corporation}.
+\item \textbf{D3:} contains the plural form \textbf{corporations}.
+\end{itemize}
+
+\textbf{Reason for missing D3.}  
+Because the index was built without stemming, the terms ``corporation'' and ``corporations'' are treated as separate tokens. BM25 therefore retrieves only the document containing the exact singular form. With stemming (e.g., Krovetz or Porter), both forms would map to the same stem and D3 would be retrieved as well.
+
+\subsubsection*{Question 2: Query to return D1 first (maximum 2 words)}
+
+\textbf{Query:} ``Nobel Prize''
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Rank} & \textbf{Document ID} & \textbf{Score} \\
+\midrule
+1 & D1 & 1.9240 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Explanation.}  
+The phrase ``Nobel Prize'' appears multiple times in D1 and does not appear in the other documents. BM25 ranks D1 at the top because:
+\begin{itemize}
+\item The term frequency in D1 is high.
+\item The phrase is rare in the small collection, giving it a strong IDF value.
+\end{itemize}
+
+\subsubsection*{Question 3: Is D4 relevant to ``Michael Jackson''?}
+
+\paragraph*{3a. Run query and analyze relevance}
+
+\textbf{Query:} ``Michael Jackson''
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Rank} & \textbf{Document ID} & \textbf{Score} \\
+\midrule
+1 & D4 & 1.1867 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Excerpt from D4:}  
+``...she remembers singing into a plastic tape recorder to the likes of Cyndi Lauper and \textbf{Michael Jackson}.''
+
+\textbf{Answer: No.}  
+D4 is not relevant to a query about Michael Jackson. The document is about Lady Gaga’s biography, and Michael Jackson is mentioned once in passing. This does not make the document topically relevant to the query.
+
+\paragraph*{3b. Query for which D4 \emph{is} relevant (maximum 2 words)}
+
+\textbf{Query:} ``Lady Gaga''
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Rank} & \textbf{Document ID} & \textbf{Score} \\
+\midrule
+1 & D4 & 1.5899 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Explanation.}  
+D4 focuses on Lady Gaga and mentions her several times. Because the document is mainly about her, BM25 assigns a higher score than in the previous query, and the document is correctly ranked first.
+
+\subsection*{Part B: Build 2 Indexes and Compare Retrieval Effectiveness}
+
+Two indexes were built over the AP Collection and evaluated using 150 queries:
+
+\begin{itemize}
+\item \textbf{Index 1:} Krovetz stemming + stopword removal
+\item \textbf{Index 2:} No stemming + stopword removal
+\end{itemize}
+
+Both indexes used:
+\begin{itemize}
+\item BM25 with \(k_1 = 0.9\), \(b = 0.4\)
+\item Top 1000 documents per query
+\item TREC format results
+\item Evaluation via \texttt{pyserini.eval.trec\_eval}
+\end{itemize}
+
+\subsubsection*{Evaluation Results}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Configuration} & \textbf{MAP} & \textbf{P@5} & \textbf{P@10} \\
+\midrule
+Krovetz + Stopwords & 0.2144 & 0.4121 & 0.3913 \\
+No Stemming + Stopwords & 0.1896 & 0.4094 & 0.3758 \\
+\midrule
+\textbf{Improvement (Krovetz)} & \textbf{+0.0248} & \textbf{+0.0027} & \textbf{+0.0155} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{Analysis and Conclusion}
+
+\textbf{Best configuration by MAP:} Krovetz stemming.
+
+\textbf{MAP improvement:} 0.0248 (about 13\% relative gain).
+
+\textbf{Explanation.}  
+Krovetz stemming reduces different word forms to a common root, which helps match documents and queries that use different morphological variants. Examples:
+
+\begin{itemize}
+\item ``running'', ``runs'', ``ran'' → ``run''
+\item ``corporation'', ``corporations'' → ``corporation''
+\item ``computing'', ``computer'', ``computers'' → ``compute''
+\end{itemize}
+
+This improves recall and makes the ranking more consistent across the full list of retrieved documents. The improvements in P@5 and P@10 are smaller, meaning that stemming mainly helps with recall across the whole ranking rather than only at the top ranks.
+
+Overall, the results show that using Krovetz stemming produces better retrieval effectiveness for all evaluated metrics.
 
 \end{document}

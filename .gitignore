@@ -3,9 +3,28 @@ __pycache__/
 *.py[codz]
 *$py.class
 
-# Lucene indexes
-HW2/indexes/
-pyserini_test/IndexStopwordsKrovetzTrecFormat/
+# IR Project-specific files
+# Lucene indexes and search results
+indexes/
+index/
+*/indexes/
+*/index/
+results/
+*/results/
+*.trec
+*_eval.txt
+IndexStopwordsKrovetzTrecFormat
+
+# Large data files and collections
+data/
+*/data/
+*.zip
+*.tar.gz
+*.tgz
+
+# Generated PDFs and documents
+*.pdf
+*.txt
 
 # C extensions
 *.so
@@ -209,9 +228,3 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-
-**.zip
-**.txt
-**.trec
-**.pdf
-data/

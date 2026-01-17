@@ -14,6 +14,8 @@ results/
 *.trec
 *_eval.txt
 IndexStopwordsKrovetzTrecFormat
+*.res
+experiments_*.csv
 
 # Large data files and collections
 data/
